@@ -4,22 +4,21 @@ const hbs = require("hbs");
 const http = require("http");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const multer = require('multer');
+const multer = require("multer");
 const port = process.env.PORT || 8000;
 const app = express();
 
 // logic multer
 const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,'uploads')
-    },
-    filename: (req,file,cb)=>{
-        console.log(file)
-        cb(null,Date.now() + path.extname(file.originalname))
-    }
-})
-const upload = multer({storage:storage});
-
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
 
 //koneksi ke sql
 const conn = mysql.createConnection({
@@ -77,7 +76,7 @@ app.get("/admin", (req, res) => {
 });
 
 //untuk tambah data destinasi
-app.post("/save",upload.single('image'),(req, res) => {
+app.post("/save", upload.single("image"), (req, res) => {
   let data = {
     id_des: req.body.id_des,
     nama: req.body.nama,
@@ -94,19 +93,19 @@ app.post("/save",upload.single('image'),(req, res) => {
 });
 
 //untuk update data destinasi
-app.post("/update",upload.single('image'), (req, res) => {
+app.post("/update", upload.single("image"), (req, res) => {
   let sql =
     "UPDATE destinasi set nama ='" +
     req.body.nama +
     "',deskripsi='" +
     req.body.deskripsi +
     "', latitude ='" +
-    req.body.latitude+
+    req.body.latitude +
     "',longitude = '" +
     req.body.longitude +
     "',image = '" +
     req.file.filename +
-  "' WHERE id_des = " + 
+    "' WHERE id_des = " +
     req.body.id;
   let query = conn.query(sql, (err, results) => {
     if (err) throw err;
@@ -121,7 +120,6 @@ app.post("/delete", (req, res) => {
     res.redirect("/admin");
   });
 });
-
 
 //server jagan dihapus
 app.listen(port, () => {
