@@ -4,6 +4,7 @@ const hbs = require("hbs");
 const http = require("http");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const conn = require("./database/koneksi");
 const multer = require("multer");
 const port = process.env.PORT || 8000;
 const app = express();
@@ -21,12 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //koneksi ke sql
-const conn = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "destinasi_batu",
-});
 
 //connect to database
 conn.connect((err) => {
